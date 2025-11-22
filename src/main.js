@@ -1,12 +1,10 @@
-// Refactored Tower of Hanoi Visualization
-import '../style.css'
+import '/style.css'
 
-// Helpers moved into main file
-async function sleep(SLEEP_TIME = 1000) {
-    await new Promise(r => setTimeout(r, SLEEP_TIME))
+export async function sleep(SLEEP_TIME = 1000) {
+    await new Promise((r) => setTimeout(r, SLEEP_TIME))
 }
 
-function mapDiscWidth(X, DISC_LENGTH) {
+export function mapDiscWidth(X, DISC_LENGTH) {
     const A = 1,
         B = DISC_LENGTH,
         C = 20,
@@ -14,38 +12,37 @@ function mapDiscWidth(X, DISC_LENGTH) {
     return ((X - A) / (B - A)) * (D - C) + C
 }
 
-/** CONFIG **/
-let DISC_LENGTH = 0
-let SLEEP_TIME = 1000
-let started = false
+let DISC_LENGTH = 0,
+    SLEEP_TIME = 1000,
+    started = false
 
-/** DOM ELEMENTS **/
+// DOM
 const resetBtn = document.getElementById("reset-button")
 const startBtn = document.getElementById("start-button")
 
-/** APPLICATION STATE **/
 const state = {
-    a: [],
+    a: Array(7)
+        .fill(0)
+        .map((_, i) => i + 1)
+        .reverse(),
     b: [],
     c: [],
     stack: [],
 
     renderStack() {
-        const moveTo = document.getElementById("move-to")
-        const stackContainer = document.querySelector("#stack")
-
-        moveTo.innerHTML = this.stack.at(-1)?.substring(20) || ""
-        stackContainer.innerHTML = ""
-
-        this.stack.forEach(item => {
-            stackContainer.innerHTML += `<div class="stack">${item}</div>`
+        document.getElementById("move-to").innerHTML = this.stack[this.stack.length - 1]?.substring(20) || ""
+        document.querySelector("#stack").innerHTML = ""
+        this.stack.forEach((ele) => {
+            document.querySelector(
+                "#stack"
+            ).innerHTML += `<div class="stack">${ele}</div>`
         })
 
-        stackContainer.innerHTML += '<div class="p-1"></div>'
+        document.querySelector("#stack").innerHTML += '<div class="p-1"></div>'
     },
 
-    pushToStack(entry) {
-        this.stack.push(entry)
+    pushToStack(x) {
+        this.stack.push(x)
         this.renderStack()
     },
 
@@ -54,107 +51,139 @@ const state = {
         this.renderStack()
     },
 
-    swapBetween(from, to) {
-        from = from.toLowerCase()
-        to = to.toLowerCase()
+    // swap by the smallest disk
+    swapBetween(key1, key2) {
+        key1 = key1.toLowerCase()
+        key2 = key2.toLowerCase()
 
-        const src = this[from]
-        const dest = this[to]
-
-        if (src.length === 0) {
-            src.push(dest.pop())
-        } else if (dest.length === 0) {
-            dest.push(src.pop())
-        } else if (src.at(-1) < dest.at(-1)) {
-            dest.push(src.pop())
-        } else {
-            src.push(dest.pop())
+        // if pipe is empty, push the disk
+        if (this[key1].length === 0) {
+            this[key1].push(this[key2].pop())
+            render()
+            return
         }
 
+        // if pipe is empty, push the disk
+        if (this[key2].length === 0) {
+            this[key2].push(this[key1].pop())
+            render()
+            return
+        }
+
+        // if both pipes are not empty, swap min and max
+        if (this[key1][this[key1].length - 1] < this[key2][this[key2].length - 1])
+            this[key2].push(this[key1].pop())
+        else this[key1].push(this[key2].pop())
+
+        // render to reflect changes
         render()
-    }
+    },
 }
 
-/** RENDERING THE PEGS **/
+// reflects state on the DOM
 function render() {
     const pipes = document.querySelectorAll(".flex-col-reverse")
-    const labels = ["A", "B", "C"]
-    const keys = ["a", "b", "c"]
 
-    keys.forEach((key, i) => {
-        pipes[i].innerHTML = `<div class="base-plate">${labels[i]}</div>`
-        state[key].forEach(disc => {
-            pipes[i].innerHTML += `
-        <div class="plate" style="width: ${mapDiscWidth(disc, DISC_LENGTH)}%">${disc}</div>
-      `
-        })
+    pipes[0].innerHTML = '<div class="base-plate">A</div>'
+    state.a.forEach((ele) => {
+        pipes[0].innerHTML += `
+      <div class="plate" style="width: ${mapDiscWidth(ele, DISC_LENGTH)}%">${ele}</div>
+    `
+    })
+
+    pipes[1].innerHTML = '<div class="base-plate">B</div>'
+    state.b.forEach((ele) => {
+        pipes[1].innerHTML += `
+      <div class="plate" style="width: ${mapDiscWidth(ele, DISC_LENGTH)}%">${ele}</div>
+    `
+    })
+
+    pipes[2].innerHTML = '<div class="base-plate">C</div>'
+    state.c.forEach((ele) => {
+        pipes[2].innerHTML += `
+      <div class="plate" style="width: ${mapDiscWidth(ele, DISC_LENGTH)}%">${ele}</div>
+    `
     })
 }
 
-/** HANOI ALGORITHM **/
+// do you love spaghetti ??
 async function compute() {
     async function hanoi(n, a, b, c) {
-        if (n === 1) {
+        if (n == 1) {
             await sleep(SLEEP_TIME)
             state.swapBetween(a, c)
             return
         }
 
         await sleep(SLEEP_TIME)
-        state.pushToStack(`hanoi(${n - 1}, ${a.toUpperCase()}, ${c.toUpperCase()}, ${b.toUpperCase()}) - move <span>${a.toUpperCase()}</span> to <span>${b.toUpperCase()}</span>`)
+        state.pushToStack(
+            `hanoi(${n - 1
+            }, ${a.toUpperCase()}, ${c.toUpperCase()}, ${b.toUpperCase()}) - move <span>${a.toUpperCase()}</span> to <span>${b.toUpperCase()}</span>`
+        )
         await hanoi(n - 1, a, c, b)
+        await sleep(SLEEP_TIME)
         state.popFromStack()
 
         await sleep(SLEEP_TIME)
-        state.pushToStack(`hanoi(${n - 1}, ${b.toUpperCase()}, ${a.toUpperCase()}, ${c.toUpperCase()}) - move <span>${b.toUpperCase()}</span> to <span>${c.toUpperCase()}</span>`)
+        state.pushToStack(
+            `hanoi(${n - 1
+            }, ${b.toUpperCase()}, ${a.toUpperCase()}, ${c.toUpperCase()}) - move <span>${b.toUpperCase()}</span> to <span>${c.toUpperCase()}</span>`
+        )
         state.swapBetween(a, c)
         await hanoi(n - 1, b, a, c)
+        await sleep(SLEEP_TIME)
         state.popFromStack()
     }
 
-    state.pushToStack(`hanoi(${DISC_LENGTH}, A, B, C) - move <span>A</span> to <span>C</span>`)
+    state.pushToStack(
+        `hanoi(${DISC_LENGTH}, A, B, C) - move <span>A</span> to <span>C</span>`
+    )
     await hanoi(DISC_LENGTH, "a", "b", "c")
+    await sleep(SLEEP_TIME)
     state.popFromStack()
 
     resetBtn.style.display = "block"
     startBtn.style.display = "none"
 }
 
-/** CONTROLS **/
 function start() {
     SLEEP_TIME = document.querySelector("input#time").value
-    if (!started) {
-        compute()
-        started = true
-    }
+    if (!started) compute(), (started = true)
 }
 
 function reset() {
     resetBtn.style.display = "none"
     startBtn.style.display = "block"
 
-    state.a = Array.from({length: DISC_LENGTH}, (_, i) => DISC_LENGTH - i)
-    state.b = []
+    let arr = []
+    for (let i = 0; i < DISC_LENGTH; i++) arr.push(i + 1)
+
+    state.a = arr.reverse()
     state.c = []
+    state.b = []
 
     started = false
+
     render()
 }
 
-/** INITIALIZATION **/
-document.querySelector("#main-form").addEventListener("submit", e => {
+document.querySelector("#main-form").addEventListener("submit", (e) => {
     e.preventDefault()
     init()
 })
 
 function init() {
-    const count = +document.querySelector("input").value
+    const count = document.querySelector("input").value
     document.getElementById("init-window").style.display = "none"
 
     DISC_LENGTH = count
-    state.a = Array.from({length: count}, (_, i) => count - i)
-    state.b = []
+
     state.c = []
+    state.b = []
+    state.a = Array(+count)
+        .fill(0)
+        .map((e, i) => i + 1)
+        .reverse()
 
     render()
 }

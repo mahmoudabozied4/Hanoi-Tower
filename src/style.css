@@ -1,153 +1,19 @@
-/* Color Palette
-Prussian Blue: #00072d
-Deep Navy: #001c55
-Imperial Blue: #0a2472
-Bright Marine: #0e6ba8
-Icy Blue: #a6e1fa
-*/
-
-/* GLOBAL STYLES */
-body {
-  margin: 0;
-  padding: 0;
-  background: #00072d; /* Prussian Blue */
-  font-family: Arial, Helvetica, sans-serif;
-  color: #a6e1fa; /* Icy Blue */
-}
-
-h1, h2 {
-  color: #a6e1fa;
-  text-align: center;
-}
-
-button {
-  padding: 10px 18px;
-  background: #0e6ba8; /* Bright Marine */
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-button:hover {
-  background: #0a2472; /* Imperial Blue */
-}
-
-input {
-  padding: 8px;
-  border-radius: 4px;
-  border: 2px solid #0e6ba8;
-  background: #001c55; /* Deep Navy */
-  color: #a6e1fa;
-}
-
-/* INIT WINDOW */
-#init-window {
-  padding: 40px;
-  max-width: 400px;
-  margin: 60px auto;
-  background: #001c55; /* Deep Navy */
-  border-radius: 12px;
-  box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
-}
-
-.init-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-/* CONTROLS + BOARD */
-.controls-and-board {
-  width: 100%;
-  max-width: 1200px;
-  margin: 40px auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-}
-
-.controls {
-  background: #001c55; /* Deep Navy */
-  padding: 20px;
-  border-radius: 10px;
-  width: 90%;
-  max-width: 500px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-}
-
-.current-move span {
-  color: #0e6ba8; /* Bright Marine */
-  font-weight: bold;
-}
-
-/* BOARD (3 PEGS) */
-.board {
-  display: flex;
-  justify-content: space-around;
-  align-items: flex-end;
-  width: 100%;
-  padding: 40px 0;
-  gap: 20px;
-}
-
-.pipe {
-  background: #001c55;
-  width: 30%;
-  min-height: 350px;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column-reverse;
-  align-items: center;
-  padding-bottom: 20px;
-  border: 3px solid #0a2472;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 .base-plate {
-  background: #0a2472; /* Imperial Blue */
-  color: #a6e1fa;
-  padding: 8px;
-  width: 100%;
-  text-align: center;
-  border-radius: 6px 6px 0 0;
-  font-weight: bold;
+  @apply bg-sky-500 w-full h-[25px] rounded-br-md border-2 border-black rounded-bl-md flex items-center justify-center text-white font-bold;
 }
 
-/* DISCS */
 .plate {
-  background: #0e6ba8; /* Bright Marine */
-  padding: 6px 0;
-  margin-top: 6px;
-  border-radius: 6px;
-  color: white;
-  text-align: center;
-  font-weight: bold;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-  transition: 0.3s;
+  @apply bg-white border border-black rounded-bl-none rounded-br-none ml-auto mr-auto h-[25px] rounded flex items-center justify-center;
 }
 
-/* STACK (CALL STACK VISUALIZATION) */
-.stack-section {
-  width: 90%;
-  max-width: 800px;
-  margin: 30px auto;
-  background: #001c55;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+.stack {
+  @apply border-t-2 border-black flex items-center justify-center;
 }
 
-#stack .stack {
-  background: #0a2472;
-  padding: 10px;
-  margin: 6px 0;
-  border-left: 4px solid #0e6ba8;
-  border-radius: 6px;
-  color: #a6e1fa;
-}
-
-.p-1 {
-  padding: 4px;
+.stack span {
+  @apply text-sky-500 font-bold px-2
 }
