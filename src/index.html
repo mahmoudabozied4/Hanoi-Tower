@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Tower of Hanoi Visualizer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="../style.css"/>
+</head>
+<body>
+<main class="app-container">
+    <!-- Initial setup window -->
+    <section id="init-window" class="init-window">
+        <h1>Tower of Hanoi</h1>
+        <form id="main-form" class="init-form">
+            <label>
+                Number of Discs:
+                <!-- This MUST be the first <input> in the page (your JS uses document.querySelector("input") for this) -->
+                <input
+                        type="number"
+                        name="discCount"
+                        min="1"
+                        max="10"
+                        value="7"
+                        required
+                />
+            </label>
+
+            <button type="submit" id="init-button">Initialize</button>
+        </form>
+    </section>
+
+    <!-- Controls + Visualization -->
+    <section class="controls-and-board">
+        <div class="controls">
+            <label>
+                Delay per move (ms):
+                <input
+                        id="time"
+                        type="number"
+                        min="0"
+                        value="1000"
+                />
+            </label>
+
+            <div class="buttons">
+                <button id="start-button">Start</button>
+                <button id="reset-button" style="display: none;">Reset</button>
+            </div>
+
+            <div class="current-move">
+                <strong>Current move:</strong>
+                <span id="move-to"></span>
+            </div>
+        </div>
+
+        <!-- Pegs / Pipes -->
+        <section class="board">
+            <div class="pipe flex-col-reverse" id="peg-a">
+                <!-- JS will render Peg A here -->
+            </div>
+            <div class="pipe flex-col-reverse" id="peg-b">
+                <!-- JS will render Peg B here -->
+            </div>
+            <div class="pipe flex-col-reverse" id="peg-c">
+                <!-- JS will render Peg C here -->
+            </div>
+        </section>
+    </section>
+
+    <!-- Call stack / recursion visualization -->
+    <section class="stack-section">
+        <h2>Call Stack</h2>
+        <div id="stack"></div>
+    </section>
+</main>
+
+<!-- Your main JS file (with sleep + mapDiscWidth moved in) -->
+<script type="module" src="./main.js"></script>
+</body>
+</html>
